@@ -1,3 +1,6 @@
 module.exports = function(args) {
-  return args.initialize || function(){};
+  var klass = args.initialize || function(){};
+  delete args.initialize;
+  klass.prototype = args;
+  return klass;
 };
