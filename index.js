@@ -14,13 +14,14 @@ module.exports = function(definition, parentClass) {
       klass.prototype[prop] = definition[prop];
     }
   }
+  var currentClass = klass;
   klass.prototype.super = function(methodName) {
     var args = Array.prototype.slice.call(arguments, 1); // [] === Array.prototype
-    var superClass = klass.__super__;
-    if (superClass.prototype.hasOwnProperty(methodName)) {
-      return superClass.prototype[methodName].apply(this, args);
-    }
-  }
+    currentClass = currentClass.__super__;
+    var result = currentClass.prototype[methodName].apply(this, args);
+    currentClass = klass;
+    return result;
+  };
 
   klass.prototype.constructor = klass;
   return klass;
